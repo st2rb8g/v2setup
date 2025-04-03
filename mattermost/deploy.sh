@@ -1,5 +1,7 @@
 #!/bin/bash
-mkdir mattermost && cd mattermost
+mkdir mattermost 
+echo "password" | sudo -S chmod -R 777 mattermost
+cd mattermost
 
 cat > .env <<EOF
 # Domain of service
