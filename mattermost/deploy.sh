@@ -3,6 +3,7 @@ mkdir mattermost
 echo "password" | sudo -S chmod -R 777 mattermost
 cd mattermost
 
+touch .env
 cat > .env <<EOF
 # Domain of service
 DOMAIN=localhost
@@ -94,8 +95,8 @@ MM_SQLSETTINGS_DATASOURCE=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postg
 MM_SERVICESETTINGS_SITEURL=http://${DOMAIN}:8065/
 EOF
 
-
-cat > .env <<EOF
+touch compose.yml
+cat > compose.yml <<EOF
 # https://docs.docker.com/compose/environment-variables/
 services:
   postgres:
