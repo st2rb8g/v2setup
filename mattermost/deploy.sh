@@ -4,7 +4,7 @@ echo "password" | sudo -S chmod -R 777 mattermost
 cd mattermost
 
 touch .env
-cat > .env <<EOF
+cat > .env <<'EOF'
 # Domain of service
 DOMAIN=mm.example.com
 
@@ -96,7 +96,7 @@ MM_SERVICESETTINGS_SITEURL=https://${DOMAIN}
 EOF
 
 touch compose.yml
-cat > compose.yml <<EOF
+cat > compose.yml <<'EOF'
 # https://docs.docker.com/compose/environment-variables/
 services:
   postgres:
@@ -169,7 +169,7 @@ echo "password" | sudo -S chown -R 2000:2000 ./volumes/app/mattermost
 echo "password" | sudo -S chmod -R 777 ./volumes/app/mattermost
 
 touch ./volumes/app/mattermost/config/config.json
-cat > ./volumes/app/mattermost/config/config.json <<EOF
+cat > ./volumes/app/mattermost/config/config.json <<'EOF'
 {
     "ServiceSettings": {
         "SiteURL": "",
