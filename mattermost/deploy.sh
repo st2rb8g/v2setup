@@ -823,3 +823,5 @@ cat > ./volumes/app/mattermost/config/config.json <<'EOF'
 }
 EOF
 echo "password" | sudo -S chmod -R 777 ./volumes/app/mattermost/config/config.json
+docker compose up -d
+curl -i -d '{"login_id":"msh@msh.com","password":"msh123,."}' http://localhost:8065/api/v4/users/login
