@@ -6,7 +6,7 @@ cd mattermost
 touch .env
 cat > .env <<EOF
 # Domain of service
-DOMAIN=localhost
+DOMAIN=mm.example.com
 
 # Container settings
 ## Timezone inside the containers. The value needs to be in the form 'Europe/Berlin'.
@@ -92,7 +92,7 @@ MM_SQLSETTINGS_DRIVERNAME=postgres
 MM_SQLSETTINGS_DATASOURCE=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable&connect_timeout=10
 
 ## Example settings (any additional setting added here also needs to be introduced in the docker-compose.yml)
-MM_SERVICESETTINGS_SITEURL=http://${DOMAIN}:8065/
+MM_SERVICESETTINGS_SITEURL=https://${DOMAIN}
 EOF
 
 touch compose.yml
@@ -100,21 +100,24 @@ cat > compose.yml <<EOF
 # https://docs.docker.com/compose/environment-variables/
 services:
   postgres:
-    image: msai-cn-beijing.cr.volces.com/agent/postgres:${POSTGRES_IMAGE_TAG}
+    #image: postgres:${POSTGRES_IMAGE_TAG}
+    image: msai-cn-beijing.cr.volces.com/agent/postgres-mattermost:with-data
     restart: ${RESTART_POLICY}
     security_opt:
       - no-new-privileges:true
     pids_limit: 100
-    read_only: true
+    #read_only: true
     tmpfs:
       - /tmp
       - /var/run/postgresql
-    volumes:
-      - ${POSTGRES_DATA_PATH}:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    #volumes:
+    #  - ${POSTGRES_DATA_PATH}:/var/lib/postgresql/data
     environment:
       # timezone inside container
       - TZ
-
+      - PGDATA=/home/postgres/data
       # necessary Postgres options/variables
       - POSTGRES_USER
       - POSTGRES_PASSWORD
@@ -165,7 +168,7 @@ mkdir -p ./volumes/app/mattermost/{config,data,logs,plugins,client/plugins,bleve
 echo "password" | sudo -S chown -R 2000:2000 ./volumes/app/mattermost
 echo "password" | sudo -S chmod -R 777 ./volumes/app/mattermost
 
-
+touch ./volumes/app/mattermost/config/config.json
 cat > ./volumes/app/mattermost/config/config.json <<EOF
 {
     "ServiceSettings": {
@@ -819,3 +822,4 @@ cat > ./volumes/app/mattermost/config/config.json <<EOF
     }
 }
 EOF
+echo "password" | sudo -S chmod -R 777 ./volumes/app/mattermost/config/config.json
